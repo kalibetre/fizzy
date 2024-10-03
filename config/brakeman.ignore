@@ -22,42 +22,8 @@
         89
       ],
       "note": ""
-    },
-    {
-      "warning_type": "Dynamic Render Path",
-      "warning_code": 15,
-      "fingerprint": "95ded3afec947789921bb5e8ce5d29bd8b2e1a7be03623ecd8810051769ef72d",
-      "check_name": "Render",
-      "message": "Render path contains parameter value",
-      "file": "app/views/bubbles/index.html.erb",
-      "line": 103,
-      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
-      "code": "render(action => @bucket.bubbles.not_popped.reverse_chronologically.mentioning(params[:filter]).ordered_by_activity.limit(10).tagged_with(Current.account.tags.find(params[:tag_id])), {})",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "BubblesController",
-          "method": "index",
-          "line": 16,
-          "file": "app/controllers/bubbles_controller.rb",
-          "rendered": {
-            "name": "bubbles/index",
-            "file": "app/views/bubbles/index.html.erb"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "bubbles/index"
-      },
-      "user_input": "params[:tag_id]",
-      "confidence": "Weak",
-      "cwe_id": [
-        22
-      ],
-      "note": ""
     }
   ],
-  "updated": "2024-10-03 16:25:56 +0100",
+  "updated": "2024-10-03 15:28:53 -0400",
   "brakeman_version": "6.2.1"
 }

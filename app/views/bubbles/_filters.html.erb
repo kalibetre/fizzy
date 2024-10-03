@@ -1,0 +1,82 @@
+<h1 class="txt-large">
+  <div class="filter" data-controller="dialog" data-action="keydown.esc->dialog#close">
+    <button class="btn btn--plain filter__button" data-action="click->dialog#toggle" data-dialog-modal-value="true">
+      Most active
+    </button>
+
+    <dialog class="filter__popup panel fill-white shadow" data-dialog-target="dialog">
+      <menu class="filter__menu flex flex-column gap-half unpad margin-none txt-medium">
+        <li><a href="#" class="filter__button">Most active</a></li>
+        <li><a href="#" class="filter__button">Most discussed</a></li>
+        <li><a href="#" class="filter__button">Most boosted</a></li>
+        <li><a href="#" class="filter__button">Newest</a></li>
+        <li><a href="#" class="filter__button">Oldest</a></li>
+        <li><a href="#" class="filter__button">Popped</a></li>
+      </menu>
+    </dialog>
+  </div>
+
+  in
+
+  <div class="filter" data-controller="dialog" data-action="keydown.esc->dialog#close">
+    <button class="btn btn--plain filter__button" data-action="click->dialog#toggle" data-dialog-modal-value="true">
+      <%= bucket.name %>
+    </button>
+
+    <dialog class="filter__popup panel fill-white shadow" data-dialog-target="dialog">
+      <menu class="filter__menu flex flex-column gap-half unpad margin-none txt-medium">
+        <% Current.user.buckets.order(:name).each do |bucket| %>
+          <li><%= link_to bucket.name, bucket_bubbles_path(bucket), class: "filter__button" %></li>
+        <% end %>
+      </menu>
+    </dialog>
+  </div>
+</h1>
+
+<h2 class="txt-medium txt-normal margin-none flex align-center gap-half">
+  <%= tag ? "Tagged" : "with" %>
+
+  <div class="filter" data-controller="dialog" data-action="keydown.esc->dialog#close">
+    <button class="btn btn--plain filter__button" data-action="click->dialog#toggle" data-dialog-modal-value="true">
+      <%= tag&.title || "any tag" %>
+    </button>
+
+    <dialog class="filter__popup panel fill-white shadow" data-dialog-target="dialog">
+      <menu class="filter__menu flex flex-column gap-half unpad margin-none txt-medium">
+        <% Current.account.tags.order(:title).each do |tag| %>
+          <li><%= link_to tag.title, params.permit(:filter, :assignee_id).merge(tag_id: tag.id) %></li>
+        <% end %>
+      </menu>
+    </dialog>
+
+    <% if tag %>
+      <%= link_to params.permit(:filter, :assignee_id), class: "btn", style: "font-size: 0.4em;" do %>
+        <%= image_tag "remove.svg", aria: { hidden: true }, size: 24 %>
+        <span class="for-screen-reader">Clear</span>
+      <% end %>
+    <% end %>
+  </div>
+
+  and
+
+  <div class="filter" data-controller="dialog" data-action="keydown.esc->dialog#close">
+    <button class="btn btn--plain filter__button" data-action="click->dialog#toggle" data-dialog-modal-value="true">
+      assigned to <%= assignee&.name || "anyone" %>
+    </button>
+
+    <dialog class="filter__popup panel fill-white shadow" data-dialog-target="dialog">
+      <menu class="filter__menu flex flex-column gap-half unpad margin-none txt-medium">
+        <% Current.account.users.order(:name).each do |user| %>
+          <li><%= link_to user.name, params.permit(:filter, :tag_id).merge(assignee_id: user.id) %></li>
+        <% end %>
+      </menu>
+    </dialog>
+
+    <% if assignee %>
+      <%= link_to params.permit(:filter, :tag_id), class: "btn", style: "font-size: 0.4em;" do %>
+        <%= image_tag "remove.svg", aria: { hidden: true }, size: 24 %>
+        <span class="for-screen-reader">Clear</span>
+      <% end %>
+    <% end %>
+  </div>
+</h2>

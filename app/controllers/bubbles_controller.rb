@@ -14,6 +14,11 @@ class BubblesController < ApplicationController
       @tag = Current.account.tags.find(params[:tag_id])
       @bubbles = @bubbles.tagged_with(@tag)
     end
+
+    if params[:assignee_id]
+      @assignee = @bucket.users.find(params[:assignee_id])
+      @bubbles = @bubbles.assigned_to(@assignee)
+    end
   end
 
   def new
