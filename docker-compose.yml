@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  fizzy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fizzy:latest
+    container_name: fizzy
+    restart: unless-stopped
+    ports:
+      - "3030:80"
+    volumes:
+      - ./storage:/rails/storage
+      - ./storage/files:/rails/storage/production/files
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/up"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
