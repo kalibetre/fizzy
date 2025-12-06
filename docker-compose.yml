@@ -12,7 +12,6 @@ services:
       - "3030:80"
     volumes:
       - fizzy_storage:/rails/storage
-      - fizzy_files:/rails/storage/production/files
     env_file:
       - .env
     healthcheck:
