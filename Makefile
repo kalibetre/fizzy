@@ -15,10 +15,11 @@ help:
 	@echo "  make clean     - Clean up containers and images"
 	@echo ""
 	@echo "Environment:"
-	@echo "  Make sure .env file exists with RAILS_MASTER_KEY"
+	@echo "  RAILS_MASTER_KEY must be set in .env file or environment"
 
 # Build Docker image
 build:
+	@echo "ℹ️  Remember to set RAILS_MASTER_KEY in your .env file or as an environment variable."
 	@echo "🔨 Building Fizzy Docker image..."
 	docker build -t fizzy:latest .
 
