@@ -17,6 +17,7 @@ class Identity < ApplicationRecord
     attributes[:purpose] = attributes.delete(:for) if attributes.key?(:for)
 
     magic_links.create!(attributes).tap do |magic_link|
+      puts "\n🔮 FIZZY VERIFICATION CODE: #{magic_link.code} for #{email_address}\n"
       MagicLinkMailer.sign_in_instructions(magic_link).deliver_later
     end
   end
