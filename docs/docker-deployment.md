@@ -45,7 +45,7 @@ bin/rails secret
 Once you have one, set it in the `SECRET_KEY_BASE` environment variable:
 
 ```sh
-docker run --environment SECRET_KEY_BASE=abcdefabcdef ...
+docker run --env SECRET_KEY_BASE=abcdefabcdef ...
 ```
 
 #### SSL
@@ -56,7 +56,7 @@ Note that if you're using SSL, you'll want to allow traffic on ports 80 and 443.
 So if you were running on `fizzy.example.com` you could enable SSL like this:
 
 ```sh
-docker run --publish 80:80 --publish 443:443 --environment TLS_DOMAIN=fizzy.example.com ...
+docker run --publish 80:80 --publish 443:443 --env TLS_DOMAIN=fizzy.example.com ...
 ```
 
 If you are terminating SSL in some other proxy in front of Fizzy, then you don't need to set `TLS_DOMAIN`, and can just publish port 80:
@@ -67,13 +67,15 @@ docker run --publish 80:80 ...
 If you aren't using SSL at all (for example, if you want to run it locally on your laptop) then you should specify `DISABLE_SSL=true` instead:
 
 ```sh
-docker run --publish 80:80 --environment DISABLE_SSL=true ...
+docker run --publish 80:80 --env DISABLE_SSL=true ...
 ```
 
 #### SMTP Email
 
 Fizzy needs to be able to send email for its sign up/sign in flow, and for its regular summary emails.
 The easiest way to set this up is to use a 3rd-party email provider (such as Postmark, Sendgrid, and so on).
+If email is not configured, you can still sign in by finding the 6-character verification code in your Docker container's logs.
+
 You can then plug all your SMTP settings from that provider into Fizzy via the following environment variables:
 
 - `MAILER_FROM_ADDRESS` - the "from" address that Fizzy should use to send email
@@ -89,6 +91,15 @@ Less commonly, you might also need to set some of the following:
 - `SMTP_SSL_VERIFY_MODE` - set to `none` to skip certificate verification (for self-signed certs)
 
 You can find out more about all these settings in the [Rails Action Mailer documentation](https://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-configuration).
+
+#### Base URL
+
+Fizzy needs to know the public URL of your instance so it can generate correct links in certain situations (like when sending emails).
+Set `BASE_URL` to the full URL where your Fizzy instance is accessible:
+
+```sh
+docker run --env BASE_URL=https://fizzy.example.com ...
+```
 
 #### VAPID keys
 
@@ -114,7 +125,7 @@ Set those in the `VAPID_PRIVATE_KEY` and `VAPID_PUBLIC_KEY` environment variable
 
 #### S3 storage (optional)
 
-If you're rather that uploaded files were stored in an S3 bucket, rather than your mounted volume, you can set that up.
+If you'd prefer that uploaded files were stored in an S3 bucket rather than in your mounted volume, you can set that up.
 
 First set `ACTIVE_STORAGE_SERVICE` to `s3`.
 Then set the following as appropriate for your S3 bucket:
@@ -123,6 +134,7 @@ Then set the following as appropriate for your S3 bucket:
 - `S3_REGION`
 - `S3_ACCESS_KEY_ID`
 - `S3_SECRET_ACCESS_KEY`
+- `CSP_CONNECT_SRC`
 
 If you're using a provider other than AWS, you will also need some of the following:
 
@@ -153,6 +165,7 @@ services:
     environment:
       - SECRET_KEY_BASE=abcdefabcdef
       - TLS_DOMAIN=fizzy.example.com
+      - BASE_URL=https://fizzy.example.com
       - MAILER_FROM_ADDRESS=fizzy@example.com
       - SMTP_ADDRESS=mail.example.com
       - SMTP_USERNAME=user

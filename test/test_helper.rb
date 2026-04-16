@@ -3,6 +3,7 @@ require_relative "../config/environment"
 
 require "rails/test_help"
 require "webmock/minitest"
+require_relative "webmock_ipaddr_extension"
 require "vcr"
 require "mocha/minitest"
 require "turbo/broadcastable/test_helper"
@@ -44,8 +45,18 @@ module ActiveSupport
     fixtures :all
 
     include ActiveJob::TestHelper
-    include ActionTextTestHelper, CachingTestHelper, CardTestHelper, ChangeTestHelper, SessionTestHelper
+    include ActionTextTestHelper, CachingTestHelper, CardTestHelper, ChangeTestHelper, DnsTestHelper, SessionTestHelper
     include Turbo::Broadcastable::TestHelper
+
+    # Jobs must carry their own account context via AccountTenanted,
+    # not rely on Current.account leaking from the test setup.
+    def perform_enqueued_jobs(...)
+      saved_account = Current.account
+      Current.account = nil
+      super
+    ensure
+      Current.account = saved_account
+    end
 
     setup do
       Current.account = accounts("37s")
@@ -154,8 +165,7 @@ module FixturesTestHelper
 
       # Format as UUID string and convert to base36 (25 chars)
       uuid = "%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x" % bytes
-      hex = uuid.delete("-")
-      hex.to_i(16).to_s(36).rjust(25, "0")
+      ActiveRecord::Type::Uuid.hex_to_base36(uuid.delete("-"))
     end
   end
 end

@@ -15,7 +15,7 @@ And then run the development server:
 bin/dev
 ```
 
-You'll be able to access the app in development at http://fizzy.localhost:3006.
+You'll be able to access the app in development at http://app.fizzy.localhost:3006.
 
 To login, enter `david@example.com` and grab the verification code from the browser console to sign in.
 
@@ -62,7 +62,7 @@ The remote CI pipeline will run tests against both SQLite and MySQL.
 
 ### Outbound Emails
 
-You can view email previews at http://fizzy.localhost:3006/rails/mailers.
+You can view email previews at http://app.fizzy.localhost:3006/rails/mailers.
 
 You can enable or disable [`letter_opener`](https://github.com/ryanb/letter_opener) to open sent emails automatically with:
 
@@ -74,7 +74,7 @@ Under the hood, this will create or remove `tmp/email-dev.txt`.
 
 ## SaaS gem
 
-37signals bundles Fizzy with [`fizzy-saas`](https://github.com/basecamp/fizzy-saas), a companion gem that links Fizzy with our billing system and contains our production setup.
+37signals bundles Fizzy with [`fizzy-saas`](https://github.com/basecamp/fizzy/tree/main/saas), a companion gem that links Fizzy with our billing system and contains our production setup.
 
 This gem depends on some private git repositories and it is not meant to be used by third parties. But we hope it can serve as inspiration for anyone wanting to run fizzy on their own infrastructure.
 
